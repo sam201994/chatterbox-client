@@ -27,15 +27,22 @@
     <div id="rooms">
       Room:
       <select id="roomSelect">
+      <option>lobby</option>
+      <option>fancy feast</option>      
+
       </select>
+      <form action="#" id="createRoom" method="post">
+        <input type="text" name="message" id="newRoom"/>
+        <input type="button" value="create new room" name="submit" class="newRoom"/>
+      </form>
     </div>
     <form action="#" id="send" method="post">
       <input type="text" name="message" id="message"/>
-      <input type="submit" name="submit" class="submit"/>
+      <input type="button" value="submit" name="submit" class="submit"/>
     </form>
       <!-- Your HTML goes here! -->
     </div>
-    <div id="chats">exist</div>
+    <div id="chats"></div>
     <div id="roomSelect"></div>
     <script src="scripts/app.js"></script>  
   </body>

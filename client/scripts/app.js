@@ -3,16 +3,18 @@ var app = {
   server: 'https://api.parse.com/1/classes/messages'
 };
 
+app.friends = {};
+
 app.init = function() {
+  $('.submit').on('click', app.handleSubmit);
+ // $('.chat .username').on('click', app.handleUsernameClick);
+  $('.newRoom').on('click', app.createNewRoom);
+
   app.fetch();
+  setInterval(app.fetch, 20000);
 };
 
 app.send = function(message) {
-  // var message = {
-  //   username: 'Marcus',
-  //   text: 'Happy new year!',
-  //   roomname: 'Fantasy suite'
-  // };
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
     url: 'https://api.parse.com/1/classes/messages',
@@ -28,19 +30,17 @@ app.send = function(message) {
     }
   });
 };
-app.renderMessage = function(message) { 
-  $('#chats').append('<li> username: ' + message.username + ' message: ' + message.text + ' roomname: ' + message.roomname + '</li>');
-};
 
 app.fetch = function() {
   $.ajax({
     // This is the url you should use to communicate with the parse API server.
     url: 'https://api.parse.com/1/classes/messages',
     type: 'GET',
+    data: { order: '-createdAt'},
     contentType: 'application/json',
     success: function (data) {
+      app.clearMessages();
       data.results.forEach(function(item, index) {
-        debugger;
         app.renderMessage(item);
       });
     },
@@ -51,14 +51,39 @@ app.fetch = function() {
   });
 };
 
+app.renderMessage = function(message) { 
+  $('#chats').append('<div class="chat" onclick="app.handleUsernameClick()" ><div class="username"  value="' + message.username + '">' + message.username + '</div><div>' + message.text + '</div></div>');
+};
+
 app.clearMessages = function() {
   $('#chats').empty();
 };
-
 
 app.renderRoom = function (room) {
   $('div #roomSelect').append('<li> Room: ' + room);
 };
 
-//$('.submit').on('click', app.send($('#message').val()))
+app.handleSubmit = function() {
+  var message = {
+    username: window.location.search.slice(10),
+    text: $('#message').val()
+  };
+  app.send(message);
+};
+
+
+app.handleUsernameClick = function(n) {
+  console.log(n);
+  // console.log( "here: ", n );
+  // app.friends[$('.username').val()] = true;
+  // //$('.chat').toggleClass('username');
+
+
+};
+
+app.createNewRoom = function () {
+  var roomname = $('#newRoom').val();
+  $('#roomSelect').append('<option>' + roomname + '</option>');
+};
+
 app.init();
